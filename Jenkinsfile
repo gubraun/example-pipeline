@@ -1,16 +1,20 @@
 pipeline {
 	agent {
-		docker { image 'ubuntu' }
+		docker { image 'arduino-build' }
 	}
 	stages {
 		stage('Stage 1') {
 			steps {
-				echo 'Hello world!' 
+				git clone https://github.com/PolySync/oscc
 			}
 		}
 		stage('Stage 2') {
 			steps {
-				echo 'I\'m ready for it'
+				cd oscc/firmware
+				mkdir build
+				cd build
+				cmake .. -DKIA_SOUL=ON
+				make
 			}
 		}
 	}
