@@ -14,7 +14,7 @@ pipeline {
 		stage('Stage 2') {
 			steps {
 				sh 'mkdir oscc/firmware/build'
-				sh 'cd oscc/firmware/build && cmake .. -DKIA_SOUL=ON'
+				sh 'cd oscc/firmware/build && cmake .. -DVEHICLE=kia_soul'
 				sh 'cd oscc/firmware/build && make'
 			}
 		}
