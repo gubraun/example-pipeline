@@ -13,9 +13,7 @@ pipeline {
 		}
 		stage('Stage 2') {
 			steps {
-				sh 'mkdir oscc/firmware/build'
-				sh 'cd oscc/firmware/build && cmake .. -DVEHICLE=kia_soul'
-				sh 'cd oscc/firmware/build && make'
+				sh 'cd oscc/firmware && mkdir build && cd build && cmake -DVEHICLE=kia_soul -DCMAKE_BUILD_TYPE=Release .. && make'
 			}
 		}
 	}
