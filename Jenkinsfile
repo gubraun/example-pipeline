@@ -9,6 +9,7 @@ pipeline {
 			steps {
 				sh 'rm -rf oscc'
 				sh 'git clone https://github.com/PolySync/oscc'
+				sh 'cd oscc && git reset --hard 887356fe692c71f78f7236a398b74d6784c6e103'
 			}
 		}
 		stage('Stage 2') {
