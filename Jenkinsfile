@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 pipeline {
 	agent {
 		docker { image 'arduino-build' }
@@ -5,16 +7,17 @@ pipeline {
 	stages {
 		stage('Stage 1') {
 			steps {
-				git clone https://github.com/PolySync/oscc
+				sh 'git clone https://github.com/PolySync/oscc'
+				cd oscc
 			}
 		}
 		stage('Stage 2') {
 			steps {
-				cd oscc/firmware
+				cd firmware
 				mkdir build
 				cd build
-				cmake .. -DKIA_SOUL=ON
-				make
+				sh 'cmake .. -DKIA_SOUL=ON'
+				sh 'make'
 			}
 		}
 	}
