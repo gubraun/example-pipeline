@@ -7,12 +7,12 @@ pipeline {
 	stages {
 		stage('Stage 1') {
 			steps {
-				mkdir foo
+				sh 'mkdir foo'
 			}
 		}
 		stage('Stage 2') {
 			steps {
-				touch foo/file
+				sh 'touch foo/file'
 			}
 		}
 	}
