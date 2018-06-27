@@ -8,11 +8,11 @@ pipeline {
 		stage('Stage 1') {
 			steps {
 				sh 'git clone https://github.com/PolySync/oscc'
-				cd oscc
 			}
 		}
 		stage('Stage 2') {
 			steps {
+				cd oscc
 				cd firmware
 				mkdir build
 				cd build
