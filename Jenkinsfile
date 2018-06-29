@@ -19,7 +19,7 @@ pipeline {
 		}
 		stage('Test') {
 			steps {
-				sh 'cd oscc/firmware && [ -d build ] || mkdir build && cd build && cmake -DTESTS=ON -DVEHICLE=kia_soul -DCMAKE_BUILD_TYPE=Release .. && make run-all-tests'
+				sh 'cd oscc/firmware && [ -d build ] || mkdir build && cd build && cmake -DTESTS=ON -DVEHICLE=kia_soul -DCMAKE_BUILD_TYPE=Release .. && make run-unit-tests'
 			}
 		}
 	}
