@@ -13,7 +13,10 @@ pipeline {
 		}
 		stage('Build') {
 			steps {
-				sh 'cd amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make && make'
+				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
+					sh 'cov-build --dir idir --emit-complementary-info make'
+					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
+				}
 			}
 		}
 		stage('Test') {
