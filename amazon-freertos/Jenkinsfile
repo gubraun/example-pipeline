@@ -1,0 +1,25 @@
+#!/usr/bin/env groovy
+
+pipeline {
+	agent {
+		docker { image 'xtensa-esp32-build' }
+	}
+	stages {
+		stage('Fetch') {
+			steps {
+				sh 'rm -rf oscc'
+				sh 'git clone https://github.com/aws/amazon-freertos'
+			}
+		}
+		stage('Build') {
+			steps {
+				sh 'cd amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make && make'
+			}
+		}
+		stage('Test') {
+			steps {
+				sh 'echo No tests.'
+			}
+		}
+	}
+}
