@@ -14,6 +14,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
+					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
 					sh 'cov-build --dir idir --emit-complementary-info make'
 					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
 				}
