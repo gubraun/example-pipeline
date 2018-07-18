@@ -2,7 +2,11 @@
 
 pipeline {
 	agent {
-		docker { image 'xtensa-esp32-build' }
+		docker { 
+			image 'xtensa-esp32-build' 
+			// Fixed hostname and mac to enable node locked license
+			args '-h build-vm --mac-address 02:42:ac:11:00:03'
+		}
 	}
 	stages {
 		stage('Fetch') {

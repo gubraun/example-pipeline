@@ -17,7 +17,9 @@ ENV PATH /opt/xtensa-esp32-elf/bin:$PATH
 ADD cov-analysis-linux64-2018.06.tar.gz /opt
 RUN cd /opt/cov-analysis-linux64-2018.06 \
  && rm -rf jre jre7 architecture-analysis sdk dynamic-analysis forcheck doc
+COPY license.dat /opt/cov-analysis-linux64-2018.06/bin
 ENV PATH /opt/cov-analysis-linux64-2018.06/bin:$PATH
+
 
 
 #RUN mkdir opt \
