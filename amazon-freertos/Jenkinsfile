@@ -3,9 +3,11 @@
 pipeline {
 	agent {
 		docker { 
-			image 'xtensa-esp32-build' 
+			image 'gubraun/cicdbuild' 
 			// Fixed hostname and mac to enable node locked license
 			args '-h build-vm --mac-address 02:42:ac:11:00:03'
+			registryUrl "https://registry.hub.docker.com/u/gubraun/cicdbuild/"
+			registryCredentialsId "b2908016-9651-432e-bc28-0de1b23793f0"
 		}
 	}
 	stages {
