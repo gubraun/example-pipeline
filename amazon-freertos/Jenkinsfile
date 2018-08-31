@@ -33,7 +33,7 @@ pipeline {
 			steps {
 				script {
 					print 'SCT utilities'
-					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://192.168.56.102:9090/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
+					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://192.168.56.102:8080/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
 				}
 			}
 		}
