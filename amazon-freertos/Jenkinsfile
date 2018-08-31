@@ -30,7 +30,7 @@ pipeline {
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
 					sh 'cov-build --dir idir --emit-complementary-info make'
 					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
-					sh 'cov-analyze --dir idir --disable-default --coding-standard-config ${COV_DIR}/config/coding-standards/misrac2012/misrac2012-mandatory-only.config -tp "file('\/tasks.c|\/queue.c|\/list.c')" --output-tag "-misrac2012" --strip-path `pwd`'
+					sh 'cov-analyze --dir idir --disable-default --coding-standard-config ${COV_DIR}/config/coding-standards/misrac2012/misrac2012-mandatory-only.config -tp "file(\\"\\/tasks.c|\\/queue.c|\\/list.c\\")" --output-tag "-misrac2012" --strip-path `pwd`'
 					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --stream freertos-cicd'
 					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --output-tag "-misrac2012" --stream freertos-cicd-misrac2012'
 					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --stream freertos-cicd --preview-report-v2 preview.json'
