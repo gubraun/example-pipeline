@@ -10,6 +10,13 @@ pipeline {
 			registryCredentialsId "b2908016-9651-432e-bc28-0de1b23793f0"
 		}
 	}
+	environment {
+		COV_HOST = '192.168.56.102'
+		COV_PORT = '8080'
+		COV_USER = 'admin'
+		COV_PASS = 'sigpass'
+		COV_DIR  = '/opt/cov-analysis-linux64-2018.06'
+	}
 	stages {
 		stage('Fetch') {
 			steps {
@@ -23,9 +30,12 @@ pipeline {
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
 					sh 'cov-build --dir idir --emit-complementary-info make'
 					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
-					sh 'cov-commit-defects --dir idir --host 192.168.56.102 --user admin --password sigpass --stream freertos-cicd'
-					sh 'cov-commit-defects --dir idir --host 192.168.56.102 --user admin --password sigpass --stream freertos-cicd --preview-report-v2 preview.json'
+					sh 'cov-analyze --dir idir --disable-default --coding-standard-config ${COV_DIR}/config/coding-standards/misrac2012/misrac2012-mandatory-only.config -tp "file(\"\/tasks.c|\/queue.c|\/list.c\")" --output-tag "-misrac2012" --strip-path `pwd`'
+					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --stream freertos-cicd'
+					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --output-tag "-misrac2012" --stream freertos-cicd-misrac2012'
+					sh 'cov-commit-defects --dir idir --host ${COV_HOST} --port ${COV_PORT} --user ${COV_USER} --password ${COV_PASS} --stream freertos-cicd --preview-report-v2 preview.json'
 					sh 'ls -la idir/output'
+					sh 'ls -la idir/output-misrac2012'
 				}
 			}
 		}
@@ -33,7 +43,7 @@ pipeline {
 			steps {
 				script {
 					print 'SCT utilities'
-					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://192.168.56.102:8080/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
+					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://${COV_HOST}:${COV_PORT}/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
 				}
 			}
 		}
