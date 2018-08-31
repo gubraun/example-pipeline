@@ -23,6 +23,17 @@ pipeline {
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
 					sh 'cov-build --dir idir --emit-complementary-info make'
 					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
+					sh 'cov-commit-defects --dir idir --host 192.168.56.102 --user admin --password sigpass --stream freertos-cicd'
+					sh 'cov-commit-defects --dir idir --host 192.168.56.102 --user admin --password sigpass --stream freertos-cicd --preview-report-v2 preview.json'
+					sh 'ls -la idir/output'
+				}
+			}
+		}
+		stage('SAST Scan Feedback') {
+			steps {
+				script {
+					print 'SCT utilities'
+					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://192.168.56.102:9090/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
 				}
 			}
 		}
