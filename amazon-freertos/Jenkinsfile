@@ -62,7 +62,7 @@ pipeline {
 		stage('Build-Time SCA') {
 			agent {
 				docker {
-					image 'openjdk:8-re'
+					image 'openjdk:8-jre'
 				}
 			}
 			steps {
