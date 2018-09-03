@@ -16,6 +16,8 @@ pipeline {
 		COV_USER = 'admin'
 		COV_PASS = 'sigpass'
 		COV_DIR  = '/opt/cov-analysis-linux64-2018.06'
+		BLACKDUCK_USER = 'gunnar'
+		BLACKDUCK_PASS = 's9=2S@Tn'
 	}
 	stages {
 		stage('Fetch') {
@@ -24,7 +26,7 @@ pipeline {
 				sh 'git clone https://github.com/aws/amazon-freertos'
 			}
 		}
-		stage('Build') {
+		stage('Build-Time SAST') {
 			steps {
 				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
@@ -44,6 +46,36 @@ pipeline {
 				script {
 					print 'SCT utilities'
 					sh 'curl -k --header "Accept: application/json" --user admin:sigpass "http://${COV_HOST}:${COV_PORT}/api/viewContents/issues/v1/Outstanding%20Security%20Risks?projectId=Amazon%20FreeRTOS" -o output.json'
+					//sh 'java -jar $(pwd)/SCT/Adapters/coverity-0.0.1.jar --previewFile $(pwd)/preview.json --curlOutputFile $(pwd)/output.json'
+					//sh 'java -jar $(pwd)/SCT/JiraBugTrack/JiraBugTracker.jar  --file $(pwd)/SCT-Findings-Coverity.xml --url ${JIRA_URL} --user ${JIRA_USER} --password ${JIRA_PASS} --issueType Bug --project CICDC'
+					//archiveArtifacts '**/SCT-Findings-Coverity.xml'
+					//sh 'java -jar $(pwd)/SCT/BuildBreaker/buildbreaker.jar --resultFile SCT-Findings-Coverity.xml --criteriaFile $(pwd)/SCT/BuildBreaker/criterias/criteria_coverity_nobreak.xml'
+				}
+			}
+		}
+		stage('Build-Time SCA') {
+			steps {
+				dir('amazon-freertos') {
+					echo 'Running Black Duck SCA'
+					sh 'ls $(pwd)'
+					sh 'ls $(WORKSPACE)'
+					//sh '''#!/bin/bash
+					//bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) --blackduck.hub.url="https://blackduck-integration.cigital.com/" --blackduck.hub.username=${BLACKDUCK_USER} --blackduck.hub.password=${BLACKDUCK_PASSWORD} --blackduck.hub.trust.cert=true --blackduck.hub.auto.import.cert=true > $WORKSPACE/log.txt''' 
+					//sh 'java -jar $(pwd)/SCT/Adapters/blackduck-api.jar blackduck-integration.cigital.com ${BLACKDUCK_USER} ${BLACKDUCK_PASSWORD} $WORKSPACE/log.txt $WORKSPACE/BlackDuck-Report.json'
+					sh '''#!/bin/bash
+					bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) --blackduck.hub.url="https://hubsig.blackducksoftware.com/" --blackduck.hub.username=${BLACKDUCK_USER} --blackduck.hub.password=${BLACKDUCK_PASSWORD} > $WORKSPACE/log.txt''' 
+					//sh 'java -jar $(pwd)/SCT/Adapters/blackduck-api.jar blackduck-integration.cigital.com ${BLACKDUCK_USER} ${BLACKDUCK_PASSWORD} $WORKSPACE/log.txt $WORKSPACE/BlackDuck-Report.json'
+					//archiveArtifacts '**/BlackDuck-Report.json'
+				}
+			}
+		}
+		stage('SCA Scan Feedback') {
+			steps {
+				script {
+					sh 'ls -la $(pwd)'
+					//sh 'java -jar $(pwd)/SCT/Adapters/blackduck.jar --reportFile $WORKSPACE/BlackDuck-Report.json'
+					//sh 'java -jar $(pwd)/SCT/JiraBugTrack/JiraBugTracker.jar  --file $(pwd)/SCT-Findings-Coverity.xml --url ${JIRA_URL} --user ${JIRA_USER} --password ${JIRA_PASS} --issueType Bug --project CICDC'
+					//sh 'java -jar $(pwd)/SCT/BuildBreaker/buildbreaker-sca.jar --resultFile SCT-Findings-Blackduck.xml --criteriaFile $(pwd)/SCT/BuildBreaker/criterias/criteria_blackduck_nobreak.xml'
 				}
 			}
 		}
