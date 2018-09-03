@@ -15,8 +15,10 @@ pipeline {
 	stages {
 		stage('Fetch') {
 			steps {
+				sh 'pwd'
 				sh 'rm -rf amazon-freertos'
 				sh 'git clone https://github.com/aws/amazon-freertos'
+				stash includes: '**/**', name "amazon-freertos'
 			}
 		}
 		stage('Build-Time SAST') {
@@ -31,6 +33,7 @@ pipeline {
 			}
 			steps {
 				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
+					sh 'pwd'
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
 					sh 'cov-build --dir idir --emit-complementary-info make'
 					sh 'cov-analyze --dir idir --all --strip-path `pwd`'
