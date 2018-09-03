@@ -32,6 +32,7 @@ pipeline {
 				}
 			}
 			steps {
+				unstash 'amazon-freertos'
 				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
 					sh 'pwd'
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
@@ -65,6 +66,7 @@ pipeline {
 				}
 			}
 			steps {
+				unstash 'amazon-freertos'
 				dir('amazon-freertos') {
 					echo 'Running Black Duck SCA'
 					sh 'ls $(pwd)'
