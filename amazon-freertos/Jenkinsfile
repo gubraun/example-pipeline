@@ -1,15 +1,8 @@
 #!/usr/bin/env groovy
 
 pipeline {
-	agent {
-		docker { 
-			image 'gubraun/cicdbuild' 
-			// Fixed hostname and mac to enable node locked license
-			args '-h build-vm --mac-address 02:42:ac:11:00:03'
-			registryUrl "https://registry.hub.docker.com/u/gubraun/cicdbuild/"
-			registryCredentialsId "b2908016-9651-432e-bc28-0de1b23793f0"
-		}
-	}
+	agent any
+
 	environment {
 		COV_HOST = '192.168.56.102'
 		COV_PORT = '8080'
@@ -27,6 +20,15 @@ pipeline {
 			}
 		}
 		stage('Build-Time SAST') {
+			agent {
+				docker { 
+					image 'gubraun/cicdbuild' 
+					// Fixed hostname and mac to enable node locked license
+					args '-h build-vm --mac-address 02:42:ac:11:00:03'
+					registryUrl "https://registry.hub.docker.com/u/gubraun/cicdbuild/"
+					registryCredentialsId "b2908016-9651-432e-bc28-0de1b23793f0"
+				}
+			}
 			steps {
 				dir('amazon-freertos/demos/espressif/esp32_devkitc_esp_wrover_kit/make') {
 					sh 'cov-configure --compiler xtensa-esp32-elf-gcc --comptype gcc --template'
@@ -54,6 +56,11 @@ pipeline {
 			}
 		}
 		stage('Build-Time SCA') {
+			agent {
+				docker {
+					image 'openjdk:8-re'
+				}
+			}
 			steps {
 				dir('amazon-freertos') {
 					echo 'Running Black Duck SCA'
