@@ -18,7 +18,7 @@ pipeline {
 				sh 'pwd'
 				sh 'rm -rf amazon-freertos'
 				sh 'git clone https://github.com/aws/amazon-freertos'
-				stash includes: '**/**', name "amazon-freertos'
+				stash includes: '**/**', name 'amazon-freertos'
 			}
 		}
 		stage('Build-Time SAST') {
