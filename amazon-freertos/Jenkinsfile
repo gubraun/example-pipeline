@@ -69,13 +69,11 @@ pipeline {
 				unstash 'amazon-freertos'
 				dir('amazon-freertos') {
 					echo 'Running Black Duck SCA'
-					sh 'ls $(pwd)'
-					sh 'ls $(WORKSPACE)'
 					//sh '''#!/bin/bash
 					//bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) --blackduck.hub.url="https://blackduck-integration.cigital.com/" --blackduck.hub.username=${BLACKDUCK_USER} --blackduck.hub.password=${BLACKDUCK_PASSWORD} --blackduck.hub.trust.cert=true --blackduck.hub.auto.import.cert=true > $WORKSPACE/log.txt''' 
 					//sh 'java -jar $(pwd)/SCT/Adapters/blackduck-api.jar blackduck-integration.cigital.com ${BLACKDUCK_USER} ${BLACKDUCK_PASSWORD} $WORKSPACE/log.txt $WORKSPACE/BlackDuck-Report.json'
 					sh '''#!/bin/bash
-					bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) --blackduck.hub.url="https://hubsig.blackducksoftware.com/" --blackduck.hub.username=${BLACKDUCK_USER} --blackduck.hub.password=${BLACKDUCK_PASSWORD} > $WORKSPACE/log.txt''' 
+					bash <(curl -s https://blackducksoftware.github.io/hub-detect/hub-detect.sh) --blackduck.hub.url="https://hubsig.blackducksoftware.com/" --blackduck.hub.username=${BLACKDUCK_USER} --blackduck.hub.password=${BLACKDUCK_PASSWORD} --blackduck.hub.trust.cert=true --blackduck.hub.auto.import.cert=true > $WORKSPACE/log.txt''' 
 					//sh 'java -jar $(pwd)/SCT/Adapters/blackduck-api.jar blackduck-integration.cigital.com ${BLACKDUCK_USER} ${BLACKDUCK_PASSWORD} $WORKSPACE/log.txt $WORKSPACE/BlackDuck-Report.json'
 					//archiveArtifacts '**/BlackDuck-Report.json'
 				}
